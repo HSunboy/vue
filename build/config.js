@@ -25,6 +25,7 @@ const weexFactoryPlugin = {
 }
 
 const aliases = require('./alias')
+//解析出路径的地址
 const resolve = p => {
   const base = p.split('/')[0]
   if (aliases[base]) {
@@ -169,9 +170,10 @@ const builds = {
 }
 
 function genConfig (name) {
+  //获取value
   const opts = builds[name]
   const config = {
-    input: opts.entry,
+    input: opts.entry,//入口
     external: opts.external,
     plugins: [
       replace({
@@ -205,6 +207,7 @@ function genConfig (name) {
   return config
 }
 
+//是否指定编译的类型
 if (process.env.TARGET) {
   module.exports = genConfig(process.env.TARGET)
 } else {

@@ -8,8 +8,9 @@ if (!fs.existsSync('dist')) {
   fs.mkdirSync('dist')
 }
 
-let builds = require('./config').getAllBuilds()
+let builds = require('./config').getAllBuilds()//获取所有编译类型的rollup配置
 
+//筛选weex配置
 // filter builds via command line arg
 if (process.argv[2]) {
   const filters = process.argv[2].split(',')
@@ -23,11 +24,14 @@ if (process.argv[2]) {
   })
 }
 
+
+
 build(builds)
 
 function build (builds) {
   let built = 0
   const total = builds.length
+  //尾递归优化写法?
   const next = () => {
     buildEntry(builds[built]).then(() => {
       built++
@@ -45,7 +49,7 @@ function buildEntry (config) {
   const { file, banner } = output
   const isProd = /min\.js$/.test(file)
   return rollup.rollup(config)
-    .then(bundle => bundle.generate(output))
+    .then(bundle => bundle.generate(output))//生成soucemap和code
     .then(({ code }) => {
       if (isProd) {
         var minified = (banner ? banner + '\n' : '') + uglify.minify(code, {
@@ -56,6 +60,7 @@ function buildEntry (config) {
             pure_funcs: ['makeMap']
           }
         }).code
+        //和代码一起写入目标文件
         return write(file, minified, true)
       } else {
         return write(file, code)

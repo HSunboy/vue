@@ -135,13 +135,14 @@ function initData (vm: Component) {
         )
       }
     }
+    //props属性和datas里是否有重复
     if (props && hasOwn(props, key)) {
       process.env.NODE_ENV !== 'production' && warn(
         `The data property "${key}" is already declared as a prop. ` +
         `Use prop default value instead.`,
         vm
       )
-    } else if (!isReserved(key)) {
+    } else if (!isReserved(key)) {//确保代理不含特殊字符$,_的字段
       proxy(vm, `_data`, key)
     }
   }

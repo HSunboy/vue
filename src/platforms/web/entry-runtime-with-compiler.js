@@ -1,14 +1,21 @@
 /* @flow */
 
+//系统功能配置文件
 import config from 'core/config'
+//提醒,函数缓存
 import { warn, cached } from 'core/util/index'
+//性能分析功能
 import { mark, measure } from 'core/util/perf'
 
 import Vue from './runtime/index'
+//查询dom,没有则提醒，并且返回一个div
 import { query } from './util/index'
+//编译核心啦
 import { compileToFunctions } from './compiler/index'
+//不同浏览器对换行符的处理，是否会发生转义
 import { shouldDecodeNewlines, shouldDecodeNewlinesForHref } from './util/compat'
 
+//获取对应id的html内容
 const idToTemplate = cached(id => {
   const el = query(id)
   return el && el.innerHTML
@@ -19,6 +26,7 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  //获取到这个dom啦
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -33,9 +41,9 @@ Vue.prototype.$mount = function (
   // resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
-    if (template) {
+    if (template) {//获取模版
       if (typeof template === 'string') {
-        if (template.charAt(0) === '#') {
+        if (template.charAt(0) === '#') {//这个是一个有id的模版dom
           template = idToTemplate(template)
           /* istanbul ignore if */
           if (process.env.NODE_ENV !== 'production' && !template) {
@@ -45,7 +53,7 @@ Vue.prototype.$mount = function (
             )
           }
         }
-      } else if (template.nodeType) {
+      } else if (template.nodeType) {//是一个dom
         template = template.innerHTML
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -53,20 +61,20 @@ Vue.prototype.$mount = function (
         }
         return this
       }
-    } else if (el) {
+    } else if (el) {//不存在模版也不存在render，取dom的html
       template = getOuterHTML(el)
     }
-    if (template) {
+    if (template) {//假如get到了模版，则开始渲染
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
-      }
+      }//计算性能
 
-      const { render, staticRenderFns } = compileToFunctions(template, {
+      const { render, staticRenderFns } = compileToFunctions(template, {//编译模版啦
         shouldDecodeNewlines,
         shouldDecodeNewlinesForHref,
-        delimiters: options.delimiters,
-        comments: options.comments
+        delimiters: options.delimiters,//模版分隔符，例如{{model}}
+        comments: options.comments//注释是否保留
       }, this)
       options.render = render
       options.staticRenderFns = staticRenderFns
@@ -74,7 +82,7 @@ Vue.prototype.$mount = function (
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile end')
-        measure(`vue ${this._name} compile`, 'compile', 'compile end')
+        measure(`vue ${this._name} compile`, 'compile', 'compile end')//计算编译时间
       }
     }
   }
