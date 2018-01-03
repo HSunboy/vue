@@ -15,7 +15,7 @@ Funds donated via Patreon goes directly to support Evan You's full-time work on 
 
 <p align="center">
   <a href="https://stdlib.com">
-    <img width="300px" src="https://raw.githubusercontent.com/vuejs/vuejs.org/master/themes/vue/source/images/stdlib.png">
+    <img width="300px " src="https://raw.githubusercontent.com/vuejs/vuejs.org/master/themes/vue/source/images/stdlib.png">
   </a>
   <br><br>
   <a href="https://xiaozhuanlan.com">
